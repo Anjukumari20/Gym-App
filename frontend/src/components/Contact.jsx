@@ -1,40 +1,37 @@
-import axios from "axios";
 import  { useState } from "react";
-import { ClipLoader } from "react-spinners";
 import { toast } from "react-toastify";
 
 const Contact = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [inputs, setInputs] = useState({
+    name: " ",
+    email: " ",
+    message: " "
+  });
 
   const sendMail = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    try {
-      const { data } = await axios.post(
-        "http://localhost:4000/send/mail",
-        {
-          name,
-          email,
-          message,
-        },
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-      setName("");
-      setEmail("");
-      setMessage("");
-      toast.success(data.message);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      toast.error(error.response.data.message);
+    // console.log(inputs);
+    const {name, email, message} = inputs;
+    const succ = handleInputError({name, email, message});
+    if(!succ) return;
+    const res = await fetch("http://localhost:4000/send/mail", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(inputs)
+    });
+    
+   
+    const data = await res.json();
+    toast.success("Message sent successfully");
+      if(data.error){
+        toast.error(data.error);
+        return false;
+      }
+      if(data.status == 200){
+        alert("Message sent successfully");
+        return true;
     }
-  };
+  }
 
   return (
     <section className="contact">
@@ -44,24 +41,24 @@ const Contact = () => {
           <label>Name</label>
           <input
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}//allows us to enter our value in targeted field
+            value={inputs.name}
+            onChange={(e) => setInputs({...inputs, name:e.target.value})}//allows us to enter our value in targeted field
           />
         </div>
-        <div>
+        <div> 
           <label>Email</label>
           <input
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={inputs.email}
+            onChange={(e) => setInputs({...inputs, email: e.target.value})}
           />
         </div>
         <div>
           <label>Message</label>
           <input
             type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            value={inputs.message}
+            onChange={(e) => setInputs({...inputs, message: e.target.value})}
           />
         </div>
         <button
@@ -73,7 +70,7 @@ const Contact = () => {
             gap: "15px",
           }}
         >
-          {loading && <ClipLoader size={20} color="white" />}
+          
           Send Message
         </button>
       </form>
@@ -82,3 +79,11 @@ const Contact = () => {
 };
 
 export default Contact;
+
+function handleInputError({name, email, message}){
+  if(!name || !email || !message){
+    toast.error("Please fill all the details");
+    return false;
+  }
+  return true;
+}
