@@ -14,7 +14,7 @@ const Contact = () => {
     const {name, email, message} = inputs;
     const succ = handleInputError({name, email, message});
     if(!succ) return;
-    const res = await fetch("http://localhost:4000/send/mail", {
+    const res = await fetch("http://localhost:8000/send/mail", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify(inputs)

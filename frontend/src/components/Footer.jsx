@@ -4,7 +4,7 @@ const Footer = () => {
   return (
     
     <footer>
-        Designed And Developed By Anju
+        Designed And Developed By Anju kumari
     </footer>
   )
 }

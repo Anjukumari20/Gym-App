@@ -1,5 +1,5 @@
 import { Check } from "lucide-react";
-//import React from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
 const Pricing = () => {
@@ -7,19 +7,19 @@ const Pricing = () => {
     {
       imgUrl: "/pricing.jpg",
       title: "QUARTERLY",
-      price: 18000,
+      price: 15000,
       length: 3,
     },
     {
       imgUrl: "/pricing.jpg",
       title: "HEAL_YEARLY",
-      price: 34000,
+      price: 30000,
       length: 6,
     },
     {
       imgUrl: "/pricing.jpg",
       title: "YEARLY",
-      price: 67000,
+      price: 60000,
       length: 12,
     },
   ];
